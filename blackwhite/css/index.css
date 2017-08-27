@@ -1,0 +1,58 @@
+#score{
+    text-align: center;
+    }
+
+h2 {
+    text-align: center;   
+   }
+
+
+
+#main1 {
+    width: 400px;
+    height: 400px;
+    background: white;
+    border: 2px solid gray;
+    margin: 0 auto;
+    padding: 0px;
+    position: relative;
+    overflow: hidden;
+    }
+
+#con {
+    margin-left: 16px;
+    width: 100%;
+    height: 400px;
+    position: absolute;
+    top: -100px;
+    }
+
+.row{
+    
+    height: 100px;
+    width: 100%;
+    }
+
+.cell{
+   
+    position: relative;
+    border: 1px solid gray;
+    height: 100px;
+    width: 98px;
+    float: left;
+    }
+
+.black {
+    background: black;
+    }
+#start{
+        position: absolute;
+      }
+.red{
+        background: red;
+    }
+#start{
+    left: 48%;
+    position: relative;
+    margin: 10px;
+}
