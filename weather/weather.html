@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+
+<body>
+    <input type="search" id="txtInput">
+    <button type="button" id="check">查询</button>
+    <div id="weather"></div>
+    <script>
+        var EventBind = {
+            addHandler: function(element, type, handler) {
+                if (element.addEventListener) //DOM2
+                {
+                    element.addEventListener(type, handler, false);
+                } else if (element.attachEvent) //IE
+                {
+                    element.attachEvent('on' + type, handler);
+                } else {
+                    element['on' + type] = handler;
+                }
+            }
+        };
+
+        function loadXMLDoc() {
+            var event = document.getElementById('txtInput');
+            var xmlhttp;
+            if (window.XMLHttpRequest) {
+                // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                // IE6, IE5 浏览器执行代码
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var data = JSON.parse(xmlhttp.responseText);
+                    document.getElementById("weather").innerHTML = data.HeWeather5[0].suggestion.air.txt;
+                }
+            }
+            if (event.value !== '') {
+                xmlhttp.open("GET", "https://free-api.heweather.com/v5/weather?city=" + encodeURI(event.value.trim()) + "&key=6ed5fad2536a43fda0be07dd99a4247f", true);
+                xmlhttp.send();
+            }
+        }
+
+        window.onload = function() {
+            var txtInput = document.getElementById('txtInput')
+            EventBind.addHandler(check, 'click', loadXMLDoc);
+        }
+    </script>
+</body>
