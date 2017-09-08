@@ -42,10 +42,10 @@ function searching(event) {
     if (event.target.value !== '') {
         var script = document.createElement('script');
         //添加地址
-        script.src = 'http://www.baidu.com/su?&wd=' + this.value + '&p=3&cb=kk';
+        script.src = 'http://www.baidu.com/su?&wd=' + encodeURI(this.value) + '&p=3&cb=kk';
         document.body.appendChild(script);
     } else {
-        var oUl = document.getElementById('ulList');
+        var oUl = document.getElementsByTagName('ul')[0];
         oUl.innerHTML = '';
     }
 }
@@ -89,7 +89,7 @@ function kk(data) {
         if (target.tagName.toLowerCase() === "li") {
             var wd = target.innerHTML;
             
-            window.open('https://www.baidu.com/s?word=' + wd);
+            window.open('https://www.baidu.com/s?word=' + encodeURI(wd));
         }
     });
     EventBind.addHandler(window, 'keydown', function (event) {//enter跳转页面
@@ -98,7 +98,7 @@ function kk(data) {
         if (e.keyCode==13) {
             var wd = txtInput.value;
             
-            window.open('https://www.baidu.com/s?word=' + wd);
+            window.open('https://www.baidu.com/s?word=' + encodeURI(wd));
         }
     });
 
@@ -112,14 +112,12 @@ function kk(data) {
 
 
 
-function showList() {
+function showList() {  
     var ulList = document.getElementsByTagName('ul')[0];
     EventBind.removeClass(ulList, 'hide');
     ulList.dataset.listIndex = -1;//设置当前搜索列表的索引，初始化为-1
-    console.log(ulList.className);
-
-
 }
+
 
 
 function hideList(e) {
@@ -131,6 +129,7 @@ function hideList(e) {
     }
 
 }
+
 function resetStyle(target) {
     [].forEach.call(target.parentNode.childNodes, function (item) {
         EventBind.removeClass(item, 'hover');
