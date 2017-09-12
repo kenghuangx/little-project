@@ -1,0 +1,92 @@
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
+#contain {
+    width: 1024px;
+    height: 373px;
+    position: relative;
+    overflow: hidden;
+}
+
+#picture {
+    width: auto;
+    height: 373px;
+    z-index: 1;
+}
+
+#contain:hover a.arrow {
+    display: block;
+}
+
+img {
+    position: absolute;
+    float: left;
+    opacity: 0;
+    -webkit-transition: 1s;
+    -moz-transition: 1s;
+    -ms-transition: 1s;
+    -o-transition: 1s;
+    transition: 1s;
+}
+
+.active {
+    opacity: 1;
+}
+
+#point {
+    position: absolute;
+    z-index: 999;
+    width: 80px;
+    height: 10px;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -50px;
+}
+
+#point span {
+    background: #000;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    width: 10px;
+    height: 10px;
+}
+
+#point .on,
+#point span:hover {
+    background: red;
+}
+
+.arrow {
+    position: absolute;
+    top: 160px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 40px;
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+    color: #ccc;
+    background: rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 10;
+    display: none;
+}
+
+.arrow:hover {
+    background: rgba(0, 0, 0, .7)
+}
+
+a {
+    text-decoration: none;
+}
+
+#prev {
+    left: 20px;
+}
+
+#next {
+    right: 20px;
+}
