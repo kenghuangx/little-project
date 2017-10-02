@@ -1,0 +1,5 @@
+/* domdata.forEach(function(row, index1) { row.forEach(function(line, index2) { for (var i = 0; i < 7; i++) { let theday=d ayarr[index1 * 7 + i]; line.push({ "year": theday.year, "month": theday.month, "day": theday.day, "bsseline": 0 }) } }) }); // console.log(domdata);
+    schedules.forEach(function(schedule, index) { var startyear=p arseInt(schedule.start.substr(0, 4)); var startmonth=p arseInt(schedule.start.substr(4, 2)); var startday=p arseInt(schedule.start.substr(6, 2)); //console.log(year, month, day); var endyear=p
+    arseInt(schedule.end.substr(0, 4)); var endmonth=p arseInt(schedule.end.substr(4, 2)); var endday=p arseInt(schedule.end.substr(6, 2)); //计算时间跨度 var colspan=( new Date(endyear, endmonth, endday) - new Date(startyear, startmonth, startday)) / (1000 * 60
+    * 60 * 24) + 1; domdata.forEach(function(row, index1) { row.forEach(function(line, index2) { for (var i=0 ; i < 7; i++) { let thetd=l ine[i]; if (thetd.year==s tartyear && thetd.month==s tartmonth && thetd.day==s tartday && thetd.baseline==i ndex2) {
+    thetd.title=s chedule.title; thetd.colspan=c olspan; thetd.type=s chedule.type; } } }) }); }); console.log(domdata);*/

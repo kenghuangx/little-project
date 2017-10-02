@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        .canlender {
+            width: 1000px;
+            height: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table.bgtable thead tr th {
+            height: 30px;
+        }
+        
+        table.bgtable tbody tr td {
+            height: 100px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            text-align: right;
+            vertical-align: top;
+            padding: 5px;
+        }
+        
+        table.bgtable tbody tr td.grey {
+            background-color: #eee;
+        }
+        
+        .tablebox2 {
+            position: absolute;
+            top: 30px;
+            width: 100%;
+            height: 600px;
+        }
+        
+        .tablebox2 .row {
+            height: 100px;
+            box-sizing: border-box;
+            padding-top: 30px;
+        }
+        
+        .tablebox2 .row .scheduletable {
+            height: 70px;
+            width: 100%;
+        }
+        
+        .tablebox2 .row .scheduletable tr {
+            height: 23px;
+            width: 100%;
+        }
+        
+        .tablebox2 .row .scheduletable tr td {
+            width: 14.2857%;
+            padding: 0 2px;
+            box-sizing: border-box;
+        }
+        
+        .tablebox2 .row .scheduletable tr .s {
+            border-radius: 15px;
+            font-size: 2px;
+            height: 20px;
+            line-height: 20px;
+            padding-left: 10px;
+            box-shadow: 1px 1px 1px black;
+        }
+        
+        .tablebox2 .row .scheduletable tr .s.life {
+            background: -webkit-linear-gradient(top, #8BC34A, #C5E1A5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="canlender" id="canlender">
+        <div class="tablebox1">
+            <table class="bgtable">
+                <thead>
+                    <tr>
+                        <th v-for="(item,index) in daynamearr ">{{item}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(week ,index1) in theweek()">
+                        <td v-for="(item,index2) in week" v-bind:class="{'grey': item.prevmonth || item.nextmonth }"> {{item.day}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tablebox2">
+            <div class="row" v-for="(row,index1) in domdata">
+                <table class="scheduletable">
+                    <tr v-for="(line,index2) in row ">
+                        <td v-for="(td,index3) in line" v-bind:colspan="td.colspan">
+                            <div v-if="td.title !=''" v-bind:class="['s',td.type]">{{td.title}}</div>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="js/vue.min.js"></script>
+    <script>
+        new Vue({
+            el: "#canlender",
+            data: {
+                daynamearr: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+
+                dayarr: [{
+                    "day": 0
+                }],
+                year: 2017,
+                month: 5,
+
+                domdata: [],
+
+                schedules: [{
+                    "title": "开会",
+                    "start": "20170509",
+                    "end": "20170514",
+                    "type": "life"
+                }, {
+                    "title": "陪吃饭",
+                    "start": "20170505",
+                    "end": "20170506",
+                    "type": "life"
+                }, {
+                    "title": "学习",
+                    "start": "20170510",
+                    "end": "20170512",
+                    "type": "life"
+                }, {
+                    "title": "玩王者荣耀",
+                    "start": "20170522",
+                    "end": "20170523",
+                    "type": "life"
+                }, {
+                    "title": "玩者荣耀",
+                    "start": "20170509",
+                    "end": "20170511",
+                    "type": "life"
+                }, {
+                    "title": "开会",
+                    "start": "20170525",
+                    "end": "20170527",
+                    "type": "life"
+                }],
+                daythingnums: [
+                    [0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0]
+                ]
+            },
+            mounted: function() {
+                var dayarr = [];
+                //这个月第一天周几
+                var thismfirstday = (new Date(this.year, this.month - 1, 1)).getDay();
+                var y = this.month == 12 ? this.year + 1 : this.year;
+                var m = this.month == 12 ? 1 : this.month;
+                //上一个月
+                var last_y = this.month == 1 ? this.year - 1 : this.year;
+                var last_m = this.month == 1 ? 12 : this.month - 1;
+                //下一个月
+                var next_y = this.month == 12 ? this.year + 1 : this.year;
+                var next_m = this.month == 12 ? 1 : this.month + 1;
+                //这个月有多少天，就是下个月最后一天减去0.01秒
+                var dayamount = new Date(new Date(y, m, 1) - 1).getDate();
+                //上一个月最后一天
+                var premonth = new Date(new Date(this.year, this.month - 1, 1) - 1).getDate();
+                while (thismfirstday-- > 0) {
+                    dayarr.unshift({
+                        "day": premonth--,
+                        "year": last_y,
+                        "month": last_m,
+                        "prevmonth": true,
+                        "occupation": []
+                    });
+                }
+                var count = 0;
+                while (dayamount-- > 0) {
+                    dayarr.push({
+                        "day": ++count,
+                        "year": this.year,
+                        "month": this.month,
+                        "occupation": []
+                    });
+                }
+                var count2 = 1;
+                if (dayarr.length <= 35) {
+                    while (dayarr.length != 35) {
+                        dayarr.push({
+                            "day": count2++,
+                            "year": next_y,
+                            "month": next_m,
+                            "nextmonth": true,
+                            "occupation": []
+                        });
+                    }
+                } else {
+                    while (dayarr.length != 42) {
+                        dayarr.push({
+                            "day": count2++,
+                            "year": next_y,
+                            "month": next_m,
+                            "nextmonth": true,
+                            "occupation": []
+                        });
+                    }
+                }
+                this.dayarr = dayarr;
+                this.calcdomdata(dayarr, this.schedules, this.daythingnums);
+            },
+            methods: {
+                calcdomdata(dayarr, schedules, daythingnums) {
+                    var domdata = dayarr.length == 42 ? [
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ]
+                    ] : [
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ],
+                        [
+                            [],
+                            [],
+                            []
+                        ]
+                    ];
+
+                    for (let rowindex = 0; rowindex < dayarr.length / 7; rowindex++) {
+                        //遍历每一周
+                        let weekarr = dayarr.slice(rowindex * 7, rowindex * 7 + 7);
+                        weekarr.forEach(function(theday, index1) {
+                            var thedayschedule = [];
+                            //遍历事件到底发生在几号
+                            schedules.forEach(function(schedule, index2) {
+                                var startyear = parseInt(schedule.start.substr(0, 4));
+                                var startmonth = parseInt(schedule.start.substr(4, 2));
+                                var startday = parseInt(schedule.start.substr(6, 2));
+                                //console.log(year, month, day);
+                                var endyear = parseInt(schedule.end.substr(0, 4));
+                                var endmonth = parseInt(schedule.end.substr(4, 2));
+                                var endday = parseInt(schedule.end.substr(6, 2));
+
+                                schedule.colspan = (new Date(endyear, endmonth - 1, endday) - new Date(startyear, startmonth - 1, startday)) / (1000 * 60 * 60 * 24) + 1;
+                                if (startday == theday.day && startmonth == theday.month && startyear == theday.year) {
+                                    thedayschedule.push(schedule);
+                                }
+                            });
+                            //console.log(thedayschedule);
+                            //遍历每一行，有事件的就占住
+                            for (let line = 0; line < 3; line++) {
+
+                                //console.log(first);
+                                if (theday.occupation.indexOf(line) == -1) {
+                                    var first = thedayschedule.shift();
+                                    if (first === undefined) {
+                                        domdata[rowindex][line].push({
+                                            "title": "",
+                                            "colspan": 1
+                                        });
+                                    } else {
+                                        domdata[rowindex][line].push({
+                                            "title": first.title,
+                                            "colspan": first.colspan,
+                                            "type": first.type
+                                        });
+                                        if (first.colspan && first.colspan != 1) {
+                                            let end = index1 + first.colspan - 1 > 6 ? 6 : index1 + first.colspan - 1;
+                                            let rest = (first.colspan - (7 - index1));
+                                            //console.log(first.title, index1, first.colspan, end);
+                                            for (let _i = index1 + 1; _i <= end; _i++) {
+                                                weekarr[_i].occupation.push(line);
+                                            }
+                                            var _rest;
+                                            var count = 0;
+                                            while (rest > 0) {
+                                                _rest = rest > 7 ? 7 : rest;
+                                                rest -= _rest;
+                                                count++;
+                                                console.log(rest, rowindex + count, line);
+                                                var nextweek = dayarr.slice((rowindex + count) * 7, (rowindex + count) * 7 + 7);
+                                                domdata[rowindex + count][line].push({
+                                                    "title": first.title,
+                                                    "colspan": _rest,
+                                                    "type": first.type
+                                                });
+                                                for (let _i = 0; _i < _rest; _i++) {
+                                                    nextweek[_i].occupation.push(line);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    this.domdata = domdata;
+                },
+                theweek: function() {
+                    var _arr = [];
+                    for (var i = 0; i < this.dayarr.length / 7; i++) {
+                        var _week = [];
+                        for (var j = 0; j < 7; j++) {
+                            _week.push(this.dayarr[i * 7 + j]);
+                        }
+                        _arr.push(_week);
+                    }
+                    return _arr;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
